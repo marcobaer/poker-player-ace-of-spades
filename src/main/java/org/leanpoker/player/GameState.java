@@ -1,8 +1,14 @@
 package org.leanpoker.player;
 
+import org.leanpoker.player.GameState.MyPlayer.Card;
+
 public class GameState {
 	int mimimumRaise;
 	int current_buy_in;
+	
+	Card community1;
+	Card community2;
+	Card community3;
 	
 	public MyPlayer eigenerSpieler;
 	

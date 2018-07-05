@@ -8,7 +8,7 @@ import com.google.gson.JsonElement;
 
 public class Player {
 
-	static final String VERSION = "v2.14";
+	static final String VERSION = "v2.15";
 
 	public static int betRequest(JsonElement request) {
 		GameState gameState;
@@ -29,6 +29,11 @@ public class Player {
 			return eigenerSpieler.stack;
 		}
 		if (hasAce(eigenerSpieler)) {
+			if (gameState.community1.value == 200 ||
+					gameState.community2.value == 200 ||
+					gameState.community3.value == 200) {
+				return eigenerSpieler.stack;
+			}
 			if (gameState.current_buy_in < eigenerSpieler.stack/10) {
 				return gameState.current_buy_in - eigenerSpieler.bet;
 			}
@@ -64,6 +69,12 @@ public class Player {
 		int min_raise_int = min_raise.getAsInt();
 		JsonElement current_buy_in = request.getAsJsonObject().get("current_buy_in");
 		GameState gameState = new GameState();
+		JsonArray communityCards = request.getAsJsonObject().get("community_cards").getAsJsonArray();
+		if (communityCards.size() >= 3) {
+			gameState.community1 = parseCard(communityCards.get(0));
+			gameState.community2 = parseCard(communityCards.get(1));
+			gameState.community3 = parseCard(communityCards.get(2));
+		}
 		gameState.mimimumRaise = min_raise_int;
 		gameState.current_buy_in = current_buy_in.getAsInt();
 		JsonElement players = request.getAsJsonObject().get("players");
