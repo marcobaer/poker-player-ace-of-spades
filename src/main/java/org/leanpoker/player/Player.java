@@ -8,7 +8,7 @@ import com.google.gson.JsonElement;
 
 public class Player {
 
-	static final String VERSION = "v2.13";
+	static final String VERSION = "v2.14";
 
 	public static int betRequest(JsonElement request) {
 		GameState gameState;
@@ -53,7 +53,10 @@ public class Player {
 	}
 
 	private static boolean isVeryGoodStartingHand(MyPlayer eigenerSpieler) {
-		return (eigenerSpieler.hole_card1.value + eigenerSpieler.hole_card2.value >= 200);
+		return (eigenerSpieler.hole_card1.value == 200 && eigenerSpieler.hole_card2.value == 200) ||
+				(eigenerSpieler.hole_card1.value == 100 && eigenerSpieler.hole_card2.value == 100) ||
+				(eigenerSpieler.hole_card1.value == 200 && eigenerSpieler.hole_card2.value == 100) ||
+				(eigenerSpieler.hole_card1.value == 100 && eigenerSpieler.hole_card2.value == 200);
 	}
 
 	static GameState parseGameState(JsonElement request) throws Exception {
