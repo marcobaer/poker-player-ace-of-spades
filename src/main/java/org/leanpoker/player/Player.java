@@ -8,7 +8,7 @@ import com.google.gson.JsonElement;
 
 public class Player {
 
-    static final String VERSION = "v2.1";
+    static final String VERSION = "v2.2";
 
     public static int betRequest(JsonElement request) {
     	GameState gameState;
@@ -25,6 +25,9 @@ public class Player {
     	try {
     		if (eigenerSpieler.hole_card1.rank.equals("A") ||
     				eigenerSpieler.hole_card2.rank.equals("A")) {
+    			return gameState.mimimumRaise * 3;
+    		}
+    		if (eigenerSpieler.hole_card1.rank.equals(eigenerSpieler.hole_card2.rank)) {
     			return gameState.mimimumRaise * 3;
     		}
 	    	if (Integer.parseInt(eigenerSpieler.hole_card1.rank) < 10 ||
