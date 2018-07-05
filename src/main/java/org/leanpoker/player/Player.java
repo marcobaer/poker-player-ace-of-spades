@@ -8,12 +8,11 @@ import com.google.gson.JsonElement;
 
 public class Player {
 
-    static final String VERSION = "v2.0";
+    static final String VERSION = "v2.1";
 
     public static int betRequest(JsonElement request) {
     	GameState gameState;
 		try {
-			System.out.println("qwertz"+request.toString());
 			gameState = parseGameState(request);
 			return getBetAmount(gameState);
 		} catch (Exception e) {
@@ -21,9 +20,13 @@ public class Player {
 		}
     }
     
-    private static int getBetAmount(GameState gameState) {
+    static int getBetAmount(GameState gameState) {
     	MyPlayer eigenerSpieler = gameState.eigenerSpieler;
     	try {
+    		if (eigenerSpieler.hole_card1.rank.equals("A") ||
+    				eigenerSpieler.hole_card2.rank.equals("A")) {
+    			return gameState.mimimumRaise * 3;
+    		}
 	    	if (Integer.parseInt(eigenerSpieler.hole_card1.rank) < 10 ||
 	    			Integer.parseInt(eigenerSpieler.hole_card2.rank) < 10) {
 	    		return 0;
