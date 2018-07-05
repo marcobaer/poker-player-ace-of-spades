@@ -8,7 +8,7 @@ import com.google.gson.JsonElement;
 
 public class Player {
 
-    static final String VERSION = "v2.6";
+    static final String VERSION = "v2.7";
 
     public static int betRequest(JsonElement request) {
     	GameState gameState;
@@ -26,23 +26,28 @@ public class Player {
 				eigenerSpieler.hole_card2.value == 200) {
 			return eigenerSpieler.stack;
 		}
+		if (eigenerSpieler.hole_card1.value == 200 ||
+				eigenerSpieler.hole_card2.value == 200) {
+			return gameState.current_buy_in;
+		}
 		if (eigenerSpieler.hole_card1.rank.equals(eigenerSpieler.hole_card2.rank)
 				&& eigenerSpieler.hole_card1.value >= 20) {
-			return gameState.mimimumRaise * 3;
+			return gameState.current_buy_in + gameState.mimimumRaise * 3;
 		}
     	if (eigenerSpieler.hole_card1.value < 20 ||
     			eigenerSpieler.hole_card2.value < 20) {
     		return 0;
     	}
-		return gameState.mimimumRaise;
+		return gameState.current_buy_in;
 	}
 
 	static GameState parseGameState(JsonElement request) throws Exception {
     	JsonElement min_raise = request.getAsJsonObject().get("minimum_raise");
     	int min_raise_int = min_raise.getAsInt();
+    	JsonElement current_buy_in = request.getAsJsonObject().get("current_buy_in");
     	GameState gameState = new GameState();
     	gameState.mimimumRaise = min_raise_int;
-    	
+    	gameState.current_buy_in = current_buy_in.getAsInt();
     	JsonElement players = request.getAsJsonObject().get("players");
     	JsonArray playersArray = players.getAsJsonArray();
     	for (JsonElement playerJason : playersArray) {

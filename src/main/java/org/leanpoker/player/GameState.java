@@ -2,6 +2,7 @@ package org.leanpoker.player;
 
 public class GameState {
 	int mimimumRaise;
+	int current_buy_in;
 	
 	public MyPlayer eigenerSpieler;
 	
