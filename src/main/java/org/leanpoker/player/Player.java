@@ -5,7 +5,7 @@ import com.google.gson.JsonParser;
 
 public class Player {
 
-    static final String VERSION = "v1.5";
+    static final String VERSION = "v1.6";
 
     public static int betRequest(JsonElement request) {
     	GameState gameState;
