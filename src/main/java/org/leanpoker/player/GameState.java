@@ -7,6 +7,8 @@ public class GameState {
 	
 	public static class MyPlayer{
 		
+		public int stack;
+		
 		public static class Card{
 			public String rank;
 			public int value;
