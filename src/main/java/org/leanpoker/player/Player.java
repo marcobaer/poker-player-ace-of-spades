@@ -25,13 +25,13 @@ public class Player {
 		if (isVeryGoodStartingHand(eigenerSpieler)) {
 			return eigenerSpieler.stack;
 		}
+		if (hohesPaar(eigenerSpieler)) {
+			return eigenerSpieler.stack;
+		}
 		if (hasAce(eigenerSpieler)) {
 			if (gameState.current_buy_in < eigenerSpieler.stack/10) {
 				return gameState.current_buy_in - eigenerSpieler.bet;
 			}
-		}
-		if (hohesPaar(eigenerSpieler)) {
-			return eigenerSpieler.stack;
 		}
 		if (hatEineKleineKarte(eigenerSpieler)) {
 			return 0;
