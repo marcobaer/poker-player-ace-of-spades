@@ -9,6 +9,7 @@ public class GameState {
 	public static class MyPlayer{
 		
 		public int stack;
+		public int bet;
 		
 		public static class Card{
 			public String rank;

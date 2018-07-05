@@ -8,7 +8,7 @@ import com.google.gson.JsonElement;
 
 public class Player {
 
-    static final String VERSION = "v2.7";
+    static final String VERSION = "v2.8";
 
     public static int betRequest(JsonElement request) {
     	GameState gameState;
@@ -28,11 +28,11 @@ public class Player {
 		}
 		if (eigenerSpieler.hole_card1.value == 200 ||
 				eigenerSpieler.hole_card2.value == 200) {
-			return gameState.current_buy_in;
+			return gameState.current_buy_in - eigenerSpieler.bet;
 		}
 		if (eigenerSpieler.hole_card1.rank.equals(eigenerSpieler.hole_card2.rank)
 				&& eigenerSpieler.hole_card1.value >= 20) {
-			return gameState.current_buy_in + gameState.mimimumRaise * 3;
+			return gameState.current_buy_in - eigenerSpieler.bet + gameState.mimimumRaise * 3;
 		}
     	if (eigenerSpieler.hole_card1.value < 20 ||
     			eigenerSpieler.hole_card2.value < 20) {
@@ -54,6 +54,7 @@ public class Player {
 			if (playerJason.getAsJsonObject().get("name").getAsString().equals("Ace of Spades")) {
 				MyPlayer myPlayer = new MyPlayer();
 				myPlayer.stack = playerJason.getAsJsonObject().get("stack").getAsInt();
+				myPlayer.bet = playerJason.getAsJsonObject().get("bet").getAsInt();
 				JsonArray hole_cards_json = playerJason.getAsJsonObject().get("hole_cards").getAsJsonArray();
 				Card card1 = parseCard(hole_cards_json.get(0));
 				Card card2 = parseCard(hole_cards_json.get(1));
