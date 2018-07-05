@@ -8,7 +8,7 @@ import com.google.gson.JsonElement;
 
 public class Player {
 
-	static final String VERSION = "v2.11";
+	static final String VERSION = "v2.12";
 
 	public static int betRequest(JsonElement request) {
 		GameState gameState;
@@ -22,11 +22,13 @@ public class Player {
 
 	static int getBetAmount(GameState gameState) {
 		MyPlayer eigenerSpieler = gameState.eigenerSpieler;
-		if (isAssAssOrKingKing(eigenerSpieler)) {
+		if (isVeryGoodStartingHand(eigenerSpieler)) {
 			return eigenerSpieler.stack;
 		}
 		if (hasAce(eigenerSpieler)) {
-			return gameState.current_buy_in - eigenerSpieler.bet;
+			if (gameState.current_buy_in < eigenerSpieler.stack/10) {
+				return gameState.current_buy_in - eigenerSpieler.bet;
+			}
 		}
 		if (hohesPaar(eigenerSpieler)) {
 			return gameState.current_buy_in - eigenerSpieler.bet + gameState.mimimumRaise * 3;
@@ -50,7 +52,7 @@ public class Player {
 		return eigenerSpieler.hole_card1.value == 200 || eigenerSpieler.hole_card2.value == 200;
 	}
 
-	private static boolean isAssAssOrKingKing(MyPlayer eigenerSpieler) {
+	private static boolean isVeryGoodStartingHand(MyPlayer eigenerSpieler) {
 		return (eigenerSpieler.hole_card1.value + eigenerSpieler.hole_card2.value >= 200);
 	}
 
