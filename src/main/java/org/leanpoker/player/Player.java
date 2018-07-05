@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class Player {
 
-    static final String VERSION = "v1.3";
+    static final String VERSION = "v1.4";
 
     public static int betRequest(JsonElement request) {
     	GameState gameState;
@@ -16,7 +16,7 @@ public class Player {
 		} catch (Exception e) {
 			return 200;
 		}
-        return gameState.mimimumRaise;
+        return Math.min(gameState.mimimumRaise,200);
     }
     
     static GameState parseGameState(JsonElement request) throws Exception {
