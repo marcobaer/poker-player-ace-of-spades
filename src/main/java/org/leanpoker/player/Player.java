@@ -8,7 +8,7 @@ import com.google.gson.JsonElement;
 
 public class Player {
 
-    static final String VERSION = "v2.2";
+    static final String VERSION = "v2.3";
 
     public static int betRequest(JsonElement request) {
     	GameState gameState;
@@ -22,20 +22,17 @@ public class Player {
     
     static int getBetAmount(GameState gameState) {
     	MyPlayer eigenerSpieler = gameState.eigenerSpieler;
-    	try {
-    		if (eigenerSpieler.hole_card1.rank.equals("A") ||
-    				eigenerSpieler.hole_card2.rank.equals("A")) {
-    			return gameState.mimimumRaise * 3;
-    		}
-    		if (eigenerSpieler.hole_card1.rank.equals(eigenerSpieler.hole_card2.rank)) {
-    			return gameState.mimimumRaise * 3;
-    		}
-	    	if (Integer.parseInt(eigenerSpieler.hole_card1.rank) < 10 ||
-	    			Integer.parseInt(eigenerSpieler.hole_card2.rank) < 10) {
-	    		return 0;
-	    	}
-    	} catch (NumberFormatException e){
-    		return gameState.mimimumRaise;
+		if (eigenerSpieler.hole_card1.value == 200 ||
+				eigenerSpieler.hole_card2.value == 200) {
+			return gameState.mimimumRaise * 3;
+		}
+		if (eigenerSpieler.hole_card1.rank.equals(eigenerSpieler.hole_card2.rank)
+				&& eigenerSpieler.hole_card1.value >= 20) {
+			return gameState.mimimumRaise * 3;
+		}
+    	if (eigenerSpieler.hole_card1.value < 20 ||
+    			eigenerSpieler.hole_card2.value < 20) {
+    		return 0;
     	}
 		return 0;
 	}
@@ -52,16 +49,10 @@ public class Player {
 			if (playerJason.getAsJsonObject().get("name").getAsString().equals("Ace of Spades")) {
 				MyPlayer myPlayer = new MyPlayer();
 				JsonArray hole_cards_json = playerJason.getAsJsonObject().get("hole_cards").getAsJsonArray();
-				JsonElement wholeCardJson = hole_cards_json.get(0);
-				String rank = wholeCardJson.getAsJsonObject().get("rank").getAsString();
-				Card card = new Card();
-				card.rank = rank;
-				myPlayer.hole_card1 = card;
-				wholeCardJson = hole_cards_json.get(1);
-				rank = wholeCardJson.getAsJsonObject().get("rank").getAsString();
-				Card card2 = new Card();
-				card2.rank = rank;
-				myPlayer.hole_card2 = card;
+				Card card1 = parseCard(hole_cards_json.get(0));
+				Card card2 = parseCard(hole_cards_json.get(1));
+				myPlayer.hole_card1 = card1;
+				myPlayer.hole_card2 = card2;
 				gameState.eigenerSpieler = myPlayer;
 				break;
 			}
@@ -69,6 +60,38 @@ public class Player {
     	return gameState;
     }
 
-    public static void showdown(JsonElement game) {
+	private static Card parseCard(JsonElement wholeCardJson) {
+		String rank = wholeCardJson.getAsJsonObject().get("rank").getAsString();
+		Card card = new Card();
+		card.rank = rank;
+		card.value = calculateValue(rank);
+		return card;
+	}
+
+    private static int calculateValue(String rank) {
+    	switch(rank) {
+    	case "2":
+    	case "3":
+    	case "4":
+    	case "5":
+    	case "6":
+    	case "7":
+    	case "8":
+    	case "9":
+    		return 10;
+    	case "10":
+    		return 20;
+    	case "J":
+    	case "Q":
+    		return 50;
+    	case "K":
+    		return 100;
+    	case "A":
+    		return 200;
+    	}
+		return 0;
+	}
+
+	public static void showdown(JsonElement game) {
     }
 }
