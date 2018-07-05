@@ -8,51 +8,63 @@ import com.google.gson.JsonElement;
 
 public class Player {
 
-    static final String VERSION = "v2.9";
+	static final String VERSION = "v2.10";
 
-    public static int betRequest(JsonElement request) {
-    	GameState gameState;
+	public static int betRequest(JsonElement request) {
+		GameState gameState;
 		try {
 			gameState = parseGameState(request);
 			return getBetAmount(gameState);
 		} catch (Exception e) {
-			return 200;
+			return 0;
 		}
-    }
-    
-    static int getBetAmount(GameState gameState) {
-    	MyPlayer eigenerSpieler = gameState.eigenerSpieler;
-		if ((eigenerSpieler.hole_card1.value == 200 &&
-				eigenerSpieler.hole_card2.value == 200) ||
-				(eigenerSpieler.hole_card1.value == 100 &&
-				eigenerSpieler.hole_card2.value == 100)){
+	}
+
+	static int getBetAmount(GameState gameState) {
+		MyPlayer eigenerSpieler = gameState.eigenerSpieler;
+		if (isAssAssOrKingKing(eigenerSpieler)) {
 			return eigenerSpieler.stack;
 		}
-		if (eigenerSpieler.hole_card1.value == 200 ||
-				eigenerSpieler.hole_card2.value == 200) {
+		if (hasAce(eigenerSpieler)) {
 			return gameState.current_buy_in - eigenerSpieler.bet;
 		}
-		if (eigenerSpieler.hole_card1.rank.equals(eigenerSpieler.hole_card2.rank)
-				&& eigenerSpieler.hole_card1.value >= 20) {
+		if (hohesPaar(eigenerSpieler)) {
 			return gameState.current_buy_in - eigenerSpieler.bet + gameState.mimimumRaise * 3;
 		}
-    	if (eigenerSpieler.hole_card1.value < 20 ||
-    			eigenerSpieler.hole_card2.value < 20) {
-    		return 0;
-    	}
-		return gameState.current_buy_in;
+		if (hatEineKleineKarte(eigenerSpieler)) {
+			return 0;
+		}
+		return 0;
+	}
+
+	private static boolean hatEineKleineKarte(MyPlayer eigenerSpieler) {
+		return eigenerSpieler.hole_card1.value < 20 || eigenerSpieler.hole_card2.value < 20;
+	}
+
+	private static boolean hohesPaar(MyPlayer eigenerSpieler) {
+		return eigenerSpieler.hole_card1.rank.equals(eigenerSpieler.hole_card2.rank)
+				&& eigenerSpieler.hole_card1.value >= 20;
+	}
+
+	private static boolean hasAce(MyPlayer eigenerSpieler) {
+		return eigenerSpieler.hole_card1.value == 200 || eigenerSpieler.hole_card2.value == 200;
+	}
+
+	private static boolean isAssAssOrKingKing(MyPlayer eigenerSpieler) {
+		return (eigenerSpieler.hole_card1.value == 200 && eigenerSpieler.hole_card2.value == 200)
+				|| (eigenerSpieler.hole_card1.value == 100 && eigenerSpieler.hole_card2.value == 100);
 	}
 
 	static GameState parseGameState(JsonElement request) throws Exception {
-    	JsonElement min_raise = request.getAsJsonObject().get("minimum_raise");
-    	int min_raise_int = min_raise.getAsInt();
-    	JsonElement current_buy_in = request.getAsJsonObject().get("current_buy_in");
-    	GameState gameState = new GameState();
-    	gameState.mimimumRaise = min_raise_int;
-    	gameState.current_buy_in = current_buy_in.getAsInt();
-    	JsonElement players = request.getAsJsonObject().get("players");
-    	JsonArray playersArray = players.getAsJsonArray();
-    	for (JsonElement playerJason : playersArray) {
+		JsonElement min_raise = request.getAsJsonObject().get("minimum_raise");
+		int min_raise_int = min_raise.getAsInt();
+		JsonElement current_buy_in = request.getAsJsonObject().get("current_buy_in");
+		GameState gameState = new GameState();
+		gameState.mimimumRaise = min_raise_int;
+		gameState.current_buy_in = current_buy_in.getAsInt();
+		JsonElement players = request.getAsJsonObject().get("players");
+		JsonArray playersArray = players.getAsJsonArray();
+		for (JsonElement playerJason : playersArray) {
 			if (playerJason.getAsJsonObject().get("name").getAsString().equals("Ace of Spades")) {
 				MyPlayer myPlayer = new MyPlayer();
 				myPlayer.stack = playerJason.getAsJsonObject().get("stack").getAsInt();
@@ -66,8 +78,8 @@ public class Player {
 				break;
 			}
 		}
-    	return gameState;
-    }
+		return gameState;
+	}
 
 	private static Card parseCard(JsonElement wholeCardJson) {
 		String rank = wholeCardJson.getAsJsonObject().get("rank").getAsString();
@@ -77,30 +89,30 @@ public class Player {
 		return card;
 	}
 
-    private static int calculateValue(String rank) {
-    	switch(rank) {
-    	case "2":
-    	case "3":
-    	case "4":
-    	case "5":
-    	case "6":
-    	case "7":
-    	case "8":
-    	case "9":
-    		return 10;
-    	case "10":
-    		return 20;
-    	case "J":
-    	case "Q":
-    		return 50;
-    	case "K":
-    		return 100;
-    	case "A":
-    		return 200;
-    	}
+	private static int calculateValue(String rank) {
+		switch (rank) {
+		case "2":
+		case "3":
+		case "4":
+		case "5":
+		case "6":
+		case "7":
+		case "8":
+		case "9":
+			return 10;
+		case "10":
+			return 20;
+		case "J":
+		case "Q":
+			return 50;
+		case "K":
+			return 100;
+		case "A":
+			return 200;
+		}
 		return 0;
 	}
 
 	public static void showdown(JsonElement game) {
-    }
+	}
 }
