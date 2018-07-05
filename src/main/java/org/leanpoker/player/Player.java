@@ -8,7 +8,7 @@ import com.google.gson.JsonElement;
 
 public class Player {
 
-	static final String VERSION = "v2.12";
+	static final String VERSION = "v2.13";
 
 	public static int betRequest(JsonElement request) {
 		GameState gameState;
@@ -31,7 +31,7 @@ public class Player {
 			}
 		}
 		if (hohesPaar(eigenerSpieler)) {
-			return gameState.current_buy_in - eigenerSpieler.bet + gameState.mimimumRaise * 3;
+			return eigenerSpieler.stack;
 		}
 		if (hatEineKleineKarte(eigenerSpieler)) {
 			return 0;
