@@ -1,8 +1,7 @@
 package org.leanpoker.player;
 
 import com.google.gson.JsonElement;
-
-import java.util.Map;
+import com.google.gson.JsonParser;
 
 public class Player {
 
@@ -16,7 +15,7 @@ public class Player {
 		} catch (Exception e) {
 			return 200;
 		}
-        return Math.min(gameState.mimimumRaise,200);
+        return Math.max(gameState.mimimumRaise,200);
     }
     
     static GameState parseGameState(JsonElement request) throws Exception {
