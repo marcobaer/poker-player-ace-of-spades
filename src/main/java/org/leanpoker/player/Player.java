@@ -6,10 +6,10 @@ import java.util.Map;
 
 public class Player {
 
-    static final String VERSION = "v1";
+    static final String VERSION = "v1.1";
 
     public static int betRequest(JsonElement request) {
-        return 1;
+        return 100;
     }
 
     public static void showdown(JsonElement game) {
