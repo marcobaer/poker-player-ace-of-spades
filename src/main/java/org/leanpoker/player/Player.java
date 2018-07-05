@@ -8,7 +8,7 @@ import com.google.gson.JsonElement;
 
 public class Player {
 
-    static final String VERSION = "v2.3";
+    static final String VERSION = "v2.4";
 
     public static int betRequest(JsonElement request) {
     	GameState gameState;
@@ -34,7 +34,7 @@ public class Player {
     			eigenerSpieler.hole_card2.value < 20) {
     		return 0;
     	}
-		return 0;
+		return gameState.mimimumRaise;
 	}
 
 	static GameState parseGameState(JsonElement request) throws Exception {
