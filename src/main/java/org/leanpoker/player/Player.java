@@ -6,10 +6,24 @@ import java.util.Map;
 
 public class Player {
 
-    static final String VERSION = "v1.1";
+    static final String VERSION = "v1.2";
 
     public static int betRequest(JsonElement request) {
-        return 100;
+    	GameState gameState;
+		try {
+			gameState = parseGameState(request);
+		} catch (Exception e) {
+			return 200;
+		}
+        return gameState.mimimumRaise;
+    }
+    
+    static GameState parseGameState(JsonElement request) throws Exception {
+    	JsonElement min_raise = request.getAsJsonObject().get("minimum_raise");
+    	int min_raise_int = min_raise.getAsInt();
+    	GameState gameState = new GameState();
+    	gameState.mimimumRaise = min_raise_int;
+    	return gameState;
     }
 
     public static void showdown(JsonElement game) {
