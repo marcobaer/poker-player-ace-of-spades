@@ -8,7 +8,7 @@ import com.google.gson.JsonElement;
 
 public class Player {
 
-    static final String VERSION = "v2.5";
+    static final String VERSION = "v2.6";
 
     public static int betRequest(JsonElement request) {
     	GameState gameState;
@@ -22,7 +22,7 @@ public class Player {
     
     static int getBetAmount(GameState gameState) {
     	MyPlayer eigenerSpieler = gameState.eigenerSpieler;
-		if (eigenerSpieler.hole_card1.value == 200 ||
+		if (eigenerSpieler.hole_card1.value == 200 &&
 				eigenerSpieler.hole_card2.value == 200) {
 			return eigenerSpieler.stack;
 		}
