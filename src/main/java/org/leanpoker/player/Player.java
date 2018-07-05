@@ -6,11 +6,12 @@ import java.util.Map;
 
 public class Player {
 
-    static final String VERSION = "v1.2";
+    static final String VERSION = "v1.3";
 
     public static int betRequest(JsonElement request) {
     	GameState gameState;
 		try {
+			System.out.println(request.toString());
 			gameState = parseGameState(request);
 		} catch (Exception e) {
 			return 200;
